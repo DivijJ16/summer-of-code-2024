@@ -18,6 +18,8 @@ from sklearn.metrics import classification_report, confusion_matrix, roc_auc_sco
 from imblearn.over_sampling import SMOTE
 from collections import Counter
 from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Reading and pre-processing the data: Since the data had some missing values, I randomly replaced these missing values with the mean of the known values in that column. I also used feature scaling to reduce the range of the parameters and to increase the models' efficiency.
 # I trained my model on 80% of the data and tested my model on the remaining 20% of the available data. This led to better predicition and higher AUC-ROC score.
@@ -27,7 +29,22 @@ inp = pd.read_csv(io.BytesIO(uploaded['creditcard.csv']))
 # Handle missing values
 inp.fillna(inp.mean(), inplace=True)
 
-X = inp.drop(columns=['Class', 'Time'])  # Drop 'Time' as it's unlikely to be useful to predict fraud.
+# Visualizing the correlation between various columns and the ouput value n order to determine non-useful columns and subsequently deleting them for efficacy.
+v= "V"
+columns_to_analyze = [v + str(i) for i in range(1, 29)]  # Replace with actual column names
+columns_to_analyze.append('Amount')  
+columns_to_analyze.append('Class')                                                                                                                                               
+# Plotting the Correlation matrix
+correlation_matrix = data[columns_to_analyze].corr()
+plt.figure(figsize=(8, 6))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f')
+plt.title("Correlation Matrix")
+plt.show()
+
+# The graph showed us that the correlation between columns V22-V28 with the output was too insignificant and they could be ignored.
+columns_to_be_dropped = [v + str(i) for i in range(22, 29)]
+columns_to_be_dropped.extend(['Class', 'Time'])  # Drop 'Time' as it's not useful to predict fraud.
+X = inp.drop(columns=columns_to_be_dropped)  
 y = inp['Class']
 
 # Scale the features to increase efficiency
