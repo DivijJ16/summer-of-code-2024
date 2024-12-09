@@ -35,7 +35,7 @@ columns_to_analyze = [v + str(i) for i in range(1, 29)]  # Replace with actual c
 columns_to_analyze.append('Amount')  
 columns_to_analyze.append('Class')                                                                                                                                               
 # Plotting the Correlation matrix
-correlation_matrix = data[columns_to_analyze].corr()
+correlation_matrix = inp[columns_to_analyze].corr()
 plt.figure(figsize=(8, 6))
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f')
 plt.title("Correlation Matrix")
