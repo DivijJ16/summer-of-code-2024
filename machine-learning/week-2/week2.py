@@ -17,15 +17,16 @@ from sklearn.base import BaseEstimator, RegressorMixin
 from sklearn.model_selection import train_test_split
 
 # Load the datasets
-data = pd.read_csv('train.csv')
-stores_data = pd.read_csv('stores.csv')
-oil_data = pd.read_csv('oil.csv')
+# I got these data files from the ecuador dataset. I've written the url for these files too..
+data = pd.read_csv('train.csv') # https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data?select=train.csv
+stores_data = pd.read_csv('stores.csv') #https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data?select=stores.csv
+oil_data = pd.read_csv('oil.csv') #https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data?select=oil.csv
 
 # Preprocessing 'stores.csv' and 'oil.csv'
 # 1) Encode categorical columns
 
-# data_encoded = pd.get_dummies(data, columns=['family'], drop_first=True)  -> This created a lot of additional columns
 # I tried one-hot encoding but it created a lot of additional boolean columns which made the dataset very large. 
+# data_encoded = pd.get_dummies(data, columns=['family'], drop_first=True)  -> This created a lot of additional columns
 # Therefore I used label encoding instead.
 
 encoder = LabelEncoder()
@@ -82,7 +83,7 @@ num_features = merged_data.select_dtypes(include=['float64', 'int64']).columns
 scaler = MinMaxScaler()
 merged_data[num_features] = scaler.fit_transform(merged_data[num_features])
 
-#CODE TO PLOT DATA  - 2D SCATTER PLOTS AND CORRELATION MATRIX
+#Plotting the Data  - 2D SCATTER PLOTS & CORRELATION MATRIX
 
 x_features = ['store_nbr', 'family','onpromotion','city','state','type','cluster','dcoilwtico','day_of_week','day','month','year']
 #  these are the features we want to analyze
