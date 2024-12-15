@@ -240,7 +240,7 @@ model.fit(merged_data)
 future = model.make_future_dataframe(periods=15)  # Predict for the next 15 days
 # Predicting future values
 forecast = model.predict(future)
-# Plot the forecast
+# Plotting the forecast
 model.plot(forecast)
 # Plotting forecast components (trend, seasonality, etc.)
 model.plot_components(forecast)
@@ -253,12 +253,12 @@ merged_data['date'] = pd.to_datetime(merged_data['date'])
 merged_data.set_index('date', inplace=True)
 
 # defining target and features
-target = 'sales'  # Replace with the actual target column
+target = 'sales' 
 features = merged_data.drop(columns=[target]).values
 target_values = merged_data[target].values
 
-# Train-test split
-X_train, X_test, y_train, y_test = train_test_split(features, target_values, test_size=0.15, shuffle=True)
+# Train-test split. I used 85%:15% split.
+X_train, X_test, y_train, y_test = train_test_split(features, target_values, test_size=0.15, shuffle=False)
 
 # Custom wrapper for ARIMA model
 class ARIMARegressor(BaseEstimator, RegressorMixin):
@@ -285,9 +285,9 @@ class SARIMARegressor(BaseEstimator, RegressorMixin):
     def predict(self, X):
         return self.model_.forecast(steps=len(X))
 
-# Creating ARIMA and SARIMA models with the best parameters found
-arima_model = ARIMARegressor(order=(p,q,d)) # Replace p, q, d with the values found using AutoARIMA
-sarima_model = SARIMARegressor(order=(p,q,d), seasonal_order=(P,Q,S,D)) # Replace P, Q, D, S with the values found using AutoSARIMA
+# Creating ARIMA and SARIMA models with the best parameters found eariler
+arima_model = ARIMARegressor(order=(p,q,d)) 
+sarima_model = SARIMARegressor(order=(p,q,d), seasonal_order=(P,Q,S,D))
 
 # Calling Voting Regressor
 voting_regressor = VotingRegressor(estimators=[
